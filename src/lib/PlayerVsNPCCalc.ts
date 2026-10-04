@@ -504,7 +504,7 @@ export default class PlayerVsNPCCalc extends BaseCalc {
       } else if (this.wearing('Barrelchest anchor')) {
         maxHit = this.trackFactor(DetailKey.MAX_HIT_SPEC, maxHit, [110, 100]);
       } else if (this.isWearingBloodMoonSet()) {
-        maxHit = this.trackFactor(DetailKey.MIN_HIT_SPEC, maxHit, [5, 4]);
+        maxHit = this.trackFactor(DetailKey.MAX_HIT_SPEC, maxHit, [5, 4]);
       } else if (this.wearing('Soulreaper axe')) {
         const stacks = Math.max(0, Math.min(5, this.player.buffs.soulreaperStacks));
         minHit = this.trackFactor(DetailKey.MIN_HIT_SPEC, maxHit, [6 * stacks, 100]);
