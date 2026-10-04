@@ -331,6 +331,8 @@ export default class PlayerVsNPCCalc extends BaseCalc {
         attackRoll = this.trackFactor(DetailKey.PLAYER_ACCURACY_SPEC, attackRoll, [2, 1]);
       } else if (this.isSunspearFinisher()) {
         attackRoll = this.trackFactor(DetailKey.PLAYER_ACCURACY_SPEC, attackRoll, [7, 10]);
+      } else if (this.isWearingBloodMoonSet()) {
+        attackRoll = this.trackFactor(DetailKey.PLAYER_ACCURACY_SPEC, attackRoll, [5, 4]);
       }
     }
 
@@ -502,8 +504,7 @@ export default class PlayerVsNPCCalc extends BaseCalc {
       } else if (this.wearing('Barrelchest anchor')) {
         maxHit = this.trackFactor(DetailKey.MAX_HIT_SPEC, maxHit, [110, 100]);
       } else if (this.isWearingBloodMoonSet()) {
-        minHit = this.trackFactor(DetailKey.MIN_HIT_SPEC, maxHit, [1, 4]);
-        maxHit = this.trackAdd(DetailKey.MAX_HIT_SPEC, maxHit, minHit);
+        maxHit = this.trackFactor(DetailKey.MIN_HIT_SPEC, maxHit, [1, 4]);
       } else if (this.wearing('Soulreaper axe')) {
         const stacks = Math.max(0, Math.min(5, this.player.buffs.soulreaperStacks));
         minHit = this.trackFactor(DetailKey.MIN_HIT_SPEC, maxHit, [6 * stacks, 100]);
@@ -2118,7 +2119,7 @@ export default class PlayerVsNPCCalc extends BaseCalc {
       const acc = this.getHitChance();
       const procChance = this.opts.usingSpecialAttack
         ? 1 - ((1 - acc) ** 2) // always if hit
-        : (acc / 3) + ((acc * acc) * 2 / 9); // 1/3 per hit;
+        : (acc * 0.33) + ((acc * acc) * 0.67 * 0.33); // 1/3 per hit;
       return this.getAttackSpeed() - procChance;
     }
 
