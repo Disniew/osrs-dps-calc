@@ -504,7 +504,7 @@ export default class PlayerVsNPCCalc extends BaseCalc {
       } else if (this.wearing('Barrelchest anchor')) {
         maxHit = this.trackFactor(DetailKey.MAX_HIT_SPEC, maxHit, [110, 100]);
       } else if (this.isWearingBloodMoonSet()) {
-        maxHit = this.trackFactor(DetailKey.MIN_HIT_SPEC, maxHit, [1, 4]);
+        maxHit = this.trackFactor(DetailKey.MIN_HIT_SPEC, maxHit, [5, 4]);
       } else if (this.wearing('Soulreaper axe')) {
         const stacks = Math.max(0, Math.min(5, this.player.buffs.soulreaperStacks));
         minHit = this.trackFactor(DetailKey.MIN_HIT_SPEC, maxHit, [6 * stacks, 100]);
@@ -1649,7 +1649,7 @@ export default class PlayerVsNPCCalc extends BaseCalc {
       const secondHit = HitDistribution.linear(acc, min, Math.max(min, secondMax));
       dist = firstHit.transform(
         (h) => {
-          if (h.accurate) {
+          if (h.accurate || this.opts.usingSpecialAttack) {
             return new HitDistribution([new WeightedHit(1.0, [h])]).zip(secondHit);
           }
           return new HitDistribution([new WeightedHit(1.0, [h, Hitsplat.INACCURATE])]);
@@ -2119,7 +2119,7 @@ export default class PlayerVsNPCCalc extends BaseCalc {
       const acc = this.getHitChance();
       const procChance = this.opts.usingSpecialAttack
         ? 1 - ((1 - acc) ** 2) // always if hit
-        : (acc * 0.33) + ((acc * acc) * 0.67 * 0.33); // 1/3 per hit;
+        : (acc * 0.33) + ((acc * acc) * 0.67 * 0.33); // 33% chance per hit;
       return this.getAttackSpeed() - procChance;
     }
 
